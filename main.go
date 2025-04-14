@@ -12,8 +12,9 @@ import (
 )
 
 type config struct {
-	port   string
-	device string
+	port       string
+	device     string
+	useDefault bool
 }
 
 var conf config
@@ -21,6 +22,8 @@ var conf config
 func init() {
 	port := flag.String("port", ":8080", "")
 	device := flag.String("device", "dbcfdab4", "")
+
+	useDefault := flag.Bool("def", false, "")
 
 	flag.Usage = func() {
 		fmt.Println(`adbscp (Real-time ADB screenshot preview in browser)
@@ -36,10 +39,11 @@ Options:
 
 	conf.port = *port
 	conf.device = *device
+	conf.useDefault = *useDefault
 }
 
 func main() {
-	if len(os.Args) == 1 {
+	if len(os.Args) == 1 && !conf.useDefault {
 		flag.Usage()
 		return
 	}
